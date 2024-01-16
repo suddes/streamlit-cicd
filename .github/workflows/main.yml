@@ -49,21 +49,20 @@ jobs:
         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
         aws-region: us-east-1
 
-    - name: Install or Update AWS SAM CLI
+
+    - name: Check for AWS SAM CLI
+      id: samcli_check
       run: |
-        sam_version=$(sam --version)
-        if [[ $sam_version == *"SAM CLI"* ]]; then
-          echo "AWS SAM CLI is already installed. Version: $sam_version"
-          echo "Updating AWS SAM CLI."
-          brew tap aws/tap
-          brew upgrade aws-sam-cli
+        if sam --version; then
+          echo "AWS SAM CLI is already installed."
+          echo "samcli_installed=true" >> $GITHUB_ENV
         else
-          echo "Installing AWS SAM CLI."
-          brew tap aws/tap
-          brew install aws-sam-cli
-        fi
-        sam --version
-        
+          echo "samcli_installed=false" >> $GITHUB_ENV
+
+    - name: Install AWS SAM CLI
+      if: env.samcli_installed == 'false'
+      run: |
+        python -m pip install aws-sam-cli
 
     - name: Build SAM application
       run: sam build
