@@ -45,7 +45,7 @@ jobs:
     - name: Login to AWS
       uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355
       with:
-          role-to-assume: arn:aws:iam::1234567890:role/example-role
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: samplerolesession
           aws-region: us-east-1
 
