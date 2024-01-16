@@ -14,12 +14,13 @@ jobs:
       aws_region: us-east-1
 
     steps:
+      - run: |
+          echo "Role to Assume: ${{ env.role_to_assume }}"
+          echo "AWS Region: ${{ env.aws_region }}"
       - name: AWS Login with Secrets
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ env.role_to_assume }}
           aws-region: ${{ env.aws_region }}
 
-      - run: |
-          echo "Role to Assume: ${{ env.role_to_assume }}"
-          echo "AWS Region: ${{ env.aws_region }}"
+
