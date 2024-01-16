@@ -50,19 +50,17 @@ jobs:
         aws-region: us-east-1
 
 
-    - name: Check for AWS SAM CLI
-      id: samcli_check
+    - name: Check and Install AWS SAM CLI
       run: |
         if sam --version; then
           echo "AWS SAM CLI is already installed."
           echo "samcli_installed=true" >> $GITHUB_ENV
         else
           echo "samcli_installed=false" >> $GITHUB_ENV
-
-    - name: Install AWS SAM CLI
-      if: env.samcli_installed == 'false'
-      run: |
-        python -m pip install aws-sam-cli
+      shell: /usr/bin/bash -e {0}
+      env:
+        pythonLocation: /opt/hostedtoolcache/Python/3.10.13/x64
+        LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.13/x64/lib
 
     - name: Build SAM application
       run: sam build
