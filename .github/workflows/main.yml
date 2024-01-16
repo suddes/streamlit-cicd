@@ -57,10 +57,13 @@ jobs:
           echo "samcli_installed=true" >> $GITHUB_ENV
         else
           echo "samcli_installed=false" >> $GITHUB_ENV
+        fi
       shell: /usr/bin/bash -e {0}
       env:
         pythonLocation: /opt/hostedtoolcache/Python/3.10.13/x64
         LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.13/x64/lib
+        AWS_DEFAULT_REGION: us-east-1
+        AWS_REGION: us-east-1
 
     - name: Build SAM application
       run: sam build
