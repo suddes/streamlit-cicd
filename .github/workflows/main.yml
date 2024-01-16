@@ -45,17 +45,22 @@ jobs:
     - name: Login to AWS
       uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355
       with:
-          role-to-assume: arn:aws:iam::1234567890:role/example-role
-          role-session-name: samplerolesession
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: SessionRole
           aws-region: us-east-1
 
-    - name: Install AWS SAM CLI
+    - name: Install or Update AWS SAM CLI
       run: |
-        wget https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
-        unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
-        sudo ./sam-installation/install
+        if [ -d "/usr/local/aws-sam-cli/current" ]; then
+          echo "Updating existing AWS SAM CLI installation."
+          sudo ./sam-installation/install --update
+        else
+          echo "Installing AWS SAM CLI."
+          wget https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
+          unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
+          sudo ./sam-installation/install
+        fi
         sam --version
-
     - name: Build SAM application
       run: sam build
 
