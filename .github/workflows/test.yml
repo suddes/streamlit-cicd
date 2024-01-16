@@ -9,6 +9,7 @@ on:
 jobs:
   aws_login_test:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     env:
       role_to_assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
       aws_region: us-east-1
