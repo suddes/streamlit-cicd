@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Example SAM Template for Streamlit App
+
+Resources:
+  StreamlitFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      CodeUri: .
+      MemorySize: 1024
+      Timeout: 300
+      Events:
+        StreamlitApi:
+          Type: Api
+          Properties:
+            Path: /streamlit
+            Method: get
+
+Outputs:
+  WebEndpoint:
+    Description: "API Gateway endpoint URL for Streamlit function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/streamlit/"

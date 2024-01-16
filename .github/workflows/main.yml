@@ -1,0 +1,63 @@
+name: Streamlit App CI/CD Pipeline
+
+on:
+  workflow_dispatch:
+    # Define inputs for the manual trigger
+    inputs:
+      # Input for specifying the environment (like dev, staging, prod)
+      environment:
+        description: 'Environment to run the workflow against (e.g., dev, staging, prod)'
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry
+        poetry install
+
+    - name: Lint with flake8
+      run: |
+        pip install flake8
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    # Add additional steps for running tests here
+    - name: Login to AWS
+      uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355
+      with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+
+    - name: Install AWS SAM CLI
+      run: |
+        wget https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
+        unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
+        sudo ./sam-installation/install
+        sam --version
+
+    - name: Build SAM application
+      run: sam build
+
+    - name: Deploy SAM application
+      run: sam deploy --no-confirm-changeset --stack-name StreamlitApp --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
+
