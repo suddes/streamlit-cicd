@@ -2,23 +2,24 @@ name: Test Workflow
 on:
   workflow_dispatch:
     inputs:
-      environmats:
-        description: 'Enter the name of the Environment to be de deployed on'
+      environment:
+        description: 'Enter the name of the Environment to be deployed on'
         required: true
         type: string
 jobs:
   aws_login_test:
     runs-on: ubuntu-latest
+    env:
+      role_to_assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+      aws_region: us-east-1
 
     steps:
       - name: AWS Login with Secrets
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          aws-region: us-east-1
-        run: |
-          echo $role-to-assume
-          echo $aws-region
-          echo ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ secrets.role_to_assume }}
+          aws-region: ${{ secrets.aws_region }}
 
-
+      - run: |
+          echo "Role to Assume: ${{ secrets.role_to_assume }}"
+          echo "AWS Region: ${{ secrets.aws_region }}"
