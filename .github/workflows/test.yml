@@ -1,0 +1,24 @@
+name: Test Workflow
+on:
+  workflow_dispatch:
+    inputs:
+      environmats:
+        description: 'Enter the name of the Environment to be de deployed on'
+        required: true
+        type: string
+jobs:
+  aws_login_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: AWS Login with Secrets
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+        run: |
+          echo $role-to-assume
+          echo $aws-region
+          echo ${{ secrets.AWS_ROLE_TO_ASSUME }}
+
+
