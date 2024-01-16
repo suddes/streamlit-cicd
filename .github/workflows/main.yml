@@ -43,11 +43,12 @@ jobs:
 
     # Add additional steps for running tests here
     - name: Login to AWS
-      uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355
+      uses: aws-actions/configure-aws-credentials@v1
       with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: SessionRole
           aws-region: us-east-1
+          role-duration-seconds: 3600
 
     - name: Install or Update AWS SAM CLI
       run: |
