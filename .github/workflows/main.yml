@@ -45,10 +45,8 @@ jobs:
     - name: Login to AWS
       uses: aws-actions/configure-aws-credentials@v1
       with:
-          role-to-assume: arn:aws:iam::642066724242:role/GitActionCICD
-          role-session-name: SessionRole
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: us-east-1
-          role-duration-seconds: 3600
 
     - name: Install or Update AWS SAM CLI
       run: |
