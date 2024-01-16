@@ -71,4 +71,4 @@ jobs:
         sam package --output-template-file package.yaml --s3-bucket ${{ secrets.S3_BUCKET }}
 
     - name: Deploy SAM application
-      run: sam deploy --s3-bucket ${{ secrets.S3_BUCKET }}
+      run: sam deploy --s3-bucket ${{ secrets.S3_BUCKET }} --stack-name StreamlitApp
