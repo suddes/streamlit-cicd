@@ -66,6 +66,10 @@ jobs:
     - name: Build SAM application
       run: sam build
 
+    - name: Package SAM Application
+      run: |
+        sam package --output-template-file package.yaml --s3-bucket ${{ secrets.S3_BUCKET }}
+
     - name: Deploy SAM application
       run: sam deploy --no-confirm-changeset --stack-name StreamlitApp --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
 
