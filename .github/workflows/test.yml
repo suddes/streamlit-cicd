@@ -6,22 +6,21 @@ on:
         description: 'Enter the name of the Environment to be deployed on'
         required: true
         type: string
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   aws_login_test:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
-    env:
-      role_to_assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-      aws_region: us-east-1
+    environment: ${{ inputs.environment }}
 
     steps:
-      - run: |
-          echo "Role to Assume: ${{ env.role_to_assume }}"
-          echo "AWS Region: ${{ env.aws_region }}"
-      - name: AWS Login with Secrets
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355
         with:
-          role-to-assume: ${{ env.role_to_assume }}
-          aws-region: ${{ env.aws_region }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
 
 
