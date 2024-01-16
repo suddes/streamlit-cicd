@@ -17,9 +17,9 @@ jobs:
       - name: AWS Login with Secrets
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{ secrets.role_to_assume }}
-          aws-region: ${{ secrets.aws_region }}
+          role-to-assume: ${{ env.role_to_assume }}
+          aws-region: ${{ env.aws_region }}
 
       - run: |
-          echo "Role to Assume: ${{ secrets.role_to_assume }}"
-          echo "AWS Region: ${{ secrets.aws_region }}"
+          echo "Role to Assume: ${{ env.role_to_assume }}"
+          echo "AWS Region: ${{ env.aws_region }}"
